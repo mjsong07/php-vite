@@ -1,0 +1,11 @@
+.idea
+*.DS_Store
+data/*
+!data/db
+!data/tmp
+application/config/local.php
+composer.lock
+vendor
+public/default
+script/test*
+node_modules

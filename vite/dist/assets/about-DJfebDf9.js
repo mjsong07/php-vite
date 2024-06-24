@@ -1,0 +1,1 @@
+import{_ as t}from"./_plugin-vue_export-helper-CQqMv2dY.js";const o={};function c(_,r){const e=Vue.resolveComponent("el-text");return Vue.openBlock(),Vue.createElementBlock("div",null,[Vue.createVNode(e,null,{default:Vue.withCtx(()=>[Vue.createTextVNode("About")]),_:1})])}const n=t(o,[["render",c],["__scopeId","data-v-fbb8abd5"]]);Vue.createApp(n).mount("#app");
