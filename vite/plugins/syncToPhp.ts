@@ -1,60 +1,55 @@
 import { Plugin } from 'vite'; 
 import fs from 'fs'; 
-import path from 'path'; 
+import path from 'path';   
+import syncToPhpList from './syncToPhpList.json'
 
 export default function syncToPhp(): Plugin {  
   return {
     name: 'syncToPhp',
     apply: 'build', // 仅在构建时应用此插件 
-    //待处理  这里替换有bug
-    transformIndexHtml(html) { 
-      let result = html; 
-      result = html.replace(
-        /<script\b[^>]*src="(\/assets\/[^"]+)"[^>]*><\/script>/g,
-        (match, p1) => {
-          const newPath = `/vite${p1}`;
-          return `<script type="module" crossorigin src="<?= $this->helper->basePath('${newPath}'); ?>"></script>`;
-        }
-      ); 
-      result = result.replace(
-        /<link\b[^>]*href="(\/assets\/[^"]+)"[^>]*\/?>/g,
-        (match, p1) => {
-          const newPath = `/vite${p1}`;
-          return `<link rel="stylesheet" href="<?= $this->helper->basePath('${newPath}'); ?>" />`;
-        }
-      ); 
-      console.log('转化html结束'); 
-      return result
-    },
-    closeBundle: async () => { 
+    closeBundle: async () => {
         console.log('同步代码到php项目-->>开始'); 
-        const sourceHtmlDir = './dist'; 
-        const targetHtmlDir = './../application/views/resource';
+        const sourceHtml = './dist/index.html';  
+        const targetBaseHtmlDir = './../application/views';  
         const sourceAssetDir = './dist/assets';
-        const targetAssetDir = '../public/vite/assets'; 
-        //复制 html
-        fs.readdir(sourceHtmlDir, (err, files) => {
-          if (err) throw err;
-          files.forEach(file => {
-            let sourcePath = path.join(sourceHtmlDir, file); 
-            const targetPath = path.join(targetHtmlDir, path.basename(file, '.html') + '.phtml');
-            if (path.extname(file) === '.html') {
-              console.log(file)
-              fs.copyFileSync(sourcePath, targetPath);
-            }
-          });
-        }); 
+        const targetAssetDir = '../public/vite/assets';  
 
-        //复制 assets
-        fs.readdir(sourceAssetDir, (err, files) => {
-          if (err) throw err;
-          files.forEach(file => {
-            let sourcePath = path.join(sourceAssetDir, file);
-            let targetPath = path.join(targetAssetDir, file); 
-              console.log(file)
-              fs.copyFileSync(sourcePath, targetPath); 
-          });
-        });   
+        if(syncToPhpList.length === 0) { 
+         console.error('构建的列表不能为空')
+         return
+        }
+
+        const ensureDirectoryExistence = (filePath) => {
+          console.log("filePath",filePath)
+          const dirname = path.dirname(filePath);
+          if (fs.existsSync(dirname)) {
+            return true;
+          }
+          ensureDirectoryExistence(dirname);
+          fs.mkdirSync(dirname);
+        }; 
+        //复制 html 
+        try {
+          const htmlContent = fs.readFileSync(sourceHtml, 'utf-8');
+          syncToPhpList.forEach(async o => { 
+            const newHtmlContent = `<script>window.__vue__router_path = '${o.name}'</script>\n${htmlContent}`; 
+            let path = `${targetBaseHtmlDir}${o.path}` 
+            ensureDirectoryExistence(path); 
+            fs.writeFileSync(path, newHtmlContent);  
+          })  
+          //复制 assets 
+           let files = fs.readdirSync(sourceAssetDir); 
+            files.forEach(async file => {
+              let sourcePath = path.join(sourceAssetDir, file);
+              let targetPath = path.join(targetAssetDir, file);  
+
+          ensureDirectoryExistence(targetPath); 
+                await fs.copyFileSync(sourcePath, targetPath);  
+            }); 
+        } catch (error) {
+          console.error('构建异常',error)
+        }
+      
         console.log('同步代码到php项目-->>结束');
     }  
   };

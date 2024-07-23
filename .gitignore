@@ -9,3 +9,7 @@ vendor
 public/default
 script/test*
 node_modules
+public/vite/assets/*
+vite/dist
+vite/package-lock.json
+application/views/test/*

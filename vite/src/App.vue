@@ -1,28 +1,24 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+<script setup lang="ts"> 
+import { zhCn } from "element-plus/es/locale/index.mjs";
+import {  onMounted } from "vue";
+import {  useRouter } from 'vue-router';
+
+const router = useRouter();
+onMounted(() => {
+    console.log("window.__vue__router_path",window.__vue__router_path)
+    if(window.__vue__router_path) {
+        router.push(`/${window.__vue__router_path}`);
+    }
+})
 </script>
-
 <template>
-  <div>
-    <el-button type="success">abcdd2</el-button> 
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
-</template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+  <el-config-provider :locale="zhCn">
+    <router-view></router-view> 
+  </el-config-provider>
+  
+</template> 
+
+<style scoped lang="scss"> 
+ 
 </style>

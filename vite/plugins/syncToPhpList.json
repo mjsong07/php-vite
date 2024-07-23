@@ -1,0 +1,4 @@
+[
+  { "name": "testvue3" , "path": "/test/testvue3.phtml"},
+  { "name": "list" , "path": "/test/list.phtml"}
+]
