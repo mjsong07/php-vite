@@ -13,7 +13,7 @@ export default function useList(queryLisPromise : any,handleSelectionChangeFun: 
       }, 
       //恢复默认设置 使用
       pageBase: {  },  
-      ids: true,
+      ids: [],
       single: false,
       multiple: false
   }) ;
