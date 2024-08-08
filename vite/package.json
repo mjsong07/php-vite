@@ -11,7 +11,9 @@
     "build:test": "vite build --mode test",
     "build:prod": "vite build --mode production",
     "build-b": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview", 
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
@@ -38,6 +40,10 @@
     "vite-plugin-cdn-import": "^1.0.1",
     "vite-plugin-mock": "^3.0.2",
     "vue-router": "^4.4.0",
-    "vue-tsc": "^2.0.21"
+    "vue-tsc": "^2.0.21", 
+    "@vitest/ui": "latest", 
+    "vitest": "latest",
+    "@vue/test-utils": "^2.4.4",
+    "jsdom": "^24.0.0"
   }
 }

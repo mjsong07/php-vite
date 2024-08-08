@@ -22,5 +22,7 @@
     "vite.config.ts",
     "plugins/**/*.ts",
     "src/utils/*.ts"
-, "src/utils/list.ts"  ]
+, "src/utils/list.ts" ,
+ "test"
+]
 }
